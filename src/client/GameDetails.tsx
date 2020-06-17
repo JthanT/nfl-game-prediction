@@ -1,8 +1,10 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
+import { outcomeConfidence } from '../utils/game';
 import { GAME_SCHEDULE_BY_ID_QUERY } from '../graphql/queries/game.queries';
 
 function GameDetails(props: {gameId: number}) {
@@ -15,6 +17,10 @@ function GameDetails(props: {gameId: number}) {
             },
         }
     );
+
+    const outcome = outcomeConfidence(data?.game_schedule[0].team_1_grade, data?.game_schedule[0].team_2_grade);
+
+    const classes = useStyles();
 
     return (
         <div>
@@ -32,23 +38,40 @@ function GameDetails(props: {gameId: number}) {
 
             <DialogContent dividers>
                 <Typography>
-                    {data?.game_schedule[0].team_1_name} Grade
-                </Typography>
-                <Typography>
-                    {data?.game_schedule[0].team_1_grade}
+                    {outcome}
                 </Typography>
             </DialogContent>
-            
-            <DialogContent dividers>
-                <Typography>
-                    {data?.game_schedule[0].team_2_name} Grade
-                </Typography>
-                <Typography>
-                    {data?.game_schedule[0].team_2_grade}
-                </Typography>
+
+            <DialogContent dividers className={classes.teamGradesRow}>
+                <div className={classes.tradeGrades}>
+                    <Typography>
+                        {data?.game_schedule[0].team_1_name} Grade
+                    </Typography>
+                    <Typography>
+                        {data?.game_schedule[0].team_1_grade}
+                    </Typography>
+                </div>
+                
+                <div className={classes.tradeGrades}>
+                    <Typography>
+                        {data?.game_schedule[0].team_2_name} Grade
+                    </Typography>
+                    <Typography>
+                        {data?.game_schedule[0].team_2_grade}
+                    </Typography>
+                </div>
             </DialogContent>
         </div>
     );
 }
 
 export default GameDetails;
+
+const useStyles = makeStyles({
+    teamGradesRow: {
+        display: 'flex',
+    },
+    tradeGrades: {
+        paddingRight: '50px',
+    },
+});

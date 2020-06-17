@@ -39,9 +39,9 @@ function AdminGameList() {
     const [openDetails, setOpenDetails] = useState(false);
     const [openGameInsert, setOpenGameInsert] = useState(false);
     const [id, setId] = useState<number>(0);
-    const [leagueYear, setLeagueYear] = useState<number>(2020);
+    const [leagueYear, setLeagueYear] = useState<number>(currentYear);
     const [openYearSelector, setOpenYearSelector] = useState<boolean>(false);
-    const [leagueWeek, setLeagueWeek] = useState<number>(1);
+    const [leagueWeek, setLeagueWeek] = useState<number>(currentWeek);
     const [openWeekSelector, setOpenWeekSelector] = useState<boolean>(false);
 
     const handleOpenDetails = (gameId: number) => {
@@ -97,21 +97,51 @@ function AdminGameList() {
 
     return (
         <div>
-            <Dialog onClose={handleCloseDetails} open={openDetails} fullWidth={true} maxWidth={'lg'}>
+            <Dialog 
+                onClose={handleCloseDetails} 
+                open={openDetails} 
+                fullWidth={true} 
+                maxWidth={'lg'}
+            >
                 <DialogActions>
-                    <IconButton size="small" onClick={handleCloseDetails} className={classes.closeDialogButton}>
+                    <IconButton 
+                        size="small" 
+                        onClick={handleCloseDetails} 
+                        className={classes.closeDialogButton}
+                    >
                         <CloseIcon/>
                     </IconButton>
                 </DialogActions>
-                <AdminModifyGameDetails gameId={id} refetchGameDetails={refetch} closeDetailsMenu={handleCloseDetails} />
+                <AdminModifyGameDetails 
+                    gameId={id} 
+                    refetchGameDetails={() => refetch({
+                        leagueYear: leagueYear,
+                        leagueWeek: leagueWeek,
+                    })} 
+                    closeDetailsMenu={handleCloseDetails} 
+                />
             </Dialog>
-            <Dialog onClose={handleCloseGameInsert} open={openGameInsert} fullWidth={true} maxWidth={'lg'}>
+            <Dialog 
+                onClose={handleCloseGameInsert} 
+                open={openGameInsert} 
+                fullWidth={true} 
+                maxWidth={'lg'}
+            >
                 <DialogActions>
-                    <IconButton size="small" onClick={handleCloseGameInsert} className={classes.closeDialogButton}>
+                    <IconButton 
+                        size="small" 
+                        onClick={handleCloseGameInsert} 
+                        className={classes.closeDialogButton}
+                    >
                         <CloseIcon/>
                     </IconButton>
                 </DialogActions>
-                <AdminGameInsert refetchGames={refetch} />
+                <AdminGameInsert 
+                    refetchGames={() => refetch({
+                        leagueYear: leagueYear,
+                        leagueWeek: leagueWeek,
+                    })} 
+                />
             </Dialog>
             <div className={classes.tableContent}>
                 <MUIDataTable
