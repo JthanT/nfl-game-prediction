@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import AdminTeamList from './admin-client/AdminTeamList';
-import AdminGameList from './admin-client/AdminGameList';
 import TeamList from './client/TeamList';
 import TeamDetails from './client/TeamDetails';
 import GameList from './client/GameList';
@@ -11,7 +9,6 @@ import GameDetails from './client/GameDetails';
 import ApolloClient from "apollo-client";
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import { ApolloProvider } from "@apollo/react-hooks";
 import { WebSocketLink } from "apollo-link-ws";
@@ -80,8 +77,6 @@ function App() {
               <Route path='/game-list' component={GameList} />
               <Route path='/past-season-game-list' component={PastSeasonGameList} />
               <Route path='/game-details' component={GameDetails} />
-              <Route path='/admin-team-list' component={AdminTeamList} />
-              <Route path='/admin-game-list' component={AdminGameList} />
               <Route render={() => <Redirect to={{pathname: "/"}} />} />
             </Switch>
         </Router>
