@@ -28,24 +28,8 @@ function App() {
     uri: "https://nfl-game-prediction.herokuapp.com/v1/graphql"
   });
 
-  const wsLink = new WebSocketLink({
-    uri: "ws://nfl-game-prediction.herokuapp.com/v1/graphql",
-    options: {
-      reconnect: true,
-    }
-  });
-
-  const link = split(
-    ({ query }) => {
-      const { kind, operation }: Definition = getMainDefinition(query);
-      return kind === "OperationDefinition" && operation === "subscription";
-    },
-    wsLink,
-    httpLink
-  );
-
   const client = new ApolloClient({
-    link,
+    link: httpLink,
     cache: new InMemoryCache(),
   });
 
