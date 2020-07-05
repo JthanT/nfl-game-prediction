@@ -11,16 +11,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar';
 import { ApolloProvider } from "@apollo/react-hooks";
-import { WebSocketLink } from "apollo-link-ws";
 import { HttpLink } from "apollo-link-http";
-import { split } from "apollo-link";
-import { getMainDefinition } from "apollo-utilities";
 import { InMemoryCache } from "apollo-cache-inmemory";
-
-interface Definition {
-  kind: string;
-  operation?: string;
-};
 
 function App() {
 
