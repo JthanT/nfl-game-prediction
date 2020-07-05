@@ -1,6 +1,6 @@
 # NFL Game Prediction
 
-#### This application predicts the outcomes of NFL games based on an assigned grade. These grades are calculated with the following factors:
+#### This application predicts the outcomes of NFL games based on calculated team grades. These grades are calculated with the following factors:
 ##### - Offence Rank
 ##### - Defence Rank
 ##### - Special Teams Rank
@@ -10,7 +10,7 @@
 
 ## Requirements
 
-Downloading and Install [NodeJS](https://nodejs.org/en/download/)
+Download and Install [NodeJS](https://nodejs.org/en/download/)
 
 
 ## Instalation & Running The Project
@@ -32,6 +32,6 @@ npm run start
 
 ## Additional details
 
-#### The backend API is managed on Heroku and all team details are managed through an admin portal. For those interested, the admin portal project is also on my GitHub. Authorization for the admin portal is handled with Auth0, so you will not be able to access the admin side. 
+#### The backend API is managed on Heroku and all team details are managed through an admin portal. For those interested, the admin portal project is also on my GitHub. Authorization for the admin portal is handled with Auth0, so you will not be able to access the admin page. 
 
-Admin Portal [NodeJS](https://nodejs.org/en/download/)
+[Admin Portal](https://github.com/JthanT/nfl-game-prediction-admin)
