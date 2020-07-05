@@ -11,23 +11,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import GameDetails from './GameDetails';
+import { timeSelections, currentLeagueTimes } from '../utils/time';
 import { GAME_SCHEDULE_BY_YEAR_QUERY } from '../graphql/queries/game.queries';
 
 function PastSeasonGameList() {
-
-    const previousYear = 2020; //Set to 2020 until the start of the 2021 season
-    const years = ["2020", "2021"];
-    const weeks = [
-        "1", "2", "3", "4", "5", "6", "7", "8", 
-        "9", "10", "11", "12", "13", "14", "15", "16",
-        "17"
-    ];
 
     const { data, refetch } = useQuery(
         GAME_SCHEDULE_BY_YEAR_QUERY,
         {
             variables: {
-                leagueYear: previousYear,
+                leagueYear: currentLeagueTimes.currentLeagueYear, //Subtract by 1 after 2020
                 leagueWeek: 1
             },
         }
@@ -136,7 +129,7 @@ function PastSeasonGameList() {
                                     onOpen={handleOpenYearSelector}
                                 >
                                     {(
-                                        years.map((year) => {
+                                        timeSelections.leagueYears.map((year) => {
                                             return <MenuItem value={year}>{year}</MenuItem>
                                         })
                                     )}
@@ -155,7 +148,7 @@ function PastSeasonGameList() {
                                     onOpen={handleOpenWeekSelector}
                                 >
                                     {(
-                                        weeks.map((week) => {
+                                        timeSelections.leagueWeeks.map((week) => {
                                             return <MenuItem value={week}>{week}</MenuItem>
                                         })
                                     )}
