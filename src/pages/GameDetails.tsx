@@ -7,7 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import { outcomeConfidence } from '../utils/game';
 import { GAME_SCHEDULE_BY_ID_QUERY } from '../graphql/queries/game.queries';
 
-function GameDetails(props: {gameId: number}) {
+function GameDetails(props: { 
+    gameId: number,
+    closeDetailsMenu?: () => void,
+}) {
     
     const { data } = useQuery(
         GAME_SCHEDULE_BY_ID_QUERY,

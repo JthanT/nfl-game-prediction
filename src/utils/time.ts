@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const currentLeagueTimes = {
     currentLeagueYear: 2020,
     currentLeagueWeek: 2,
