@@ -1,18 +1,36 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import TeamList from './client/TeamList';
-import TeamDetails from './client/TeamDetails';
-import GameList from './client/GameList';
-import PastSeasonGameList from './client/PastSeasonGameList';
-import GameDetails from './client/GameDetails';
-import ApolloClient from "apollo-client";
-import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
+import TeamList from './pages/TeamList';
+import TeamDetails from './pages/TeamDetails';
+import GameList from './pages/GameList';
+import PastSeasonGameList from './pages/PastSeasonGameList';
+import GameDetails from './pages/GameDetails';
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink
+} from '@apollo/client';
+import { AppBar, Typography, Toolbar } from '@material-ui/core';
 import { ApolloProvider } from "@apollo/react-hooks";
-import { HttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+    backgroundColor: '#dae4f2',
+  },
+  navBarTitle: {
+    flexGrow: 1,
+  },
+  navBarSectionTitles: {
+    flexGrow: 1,
+    textDecoration: 'none',
+    color: "white",
+  },
+  navBar: {
+    backgroundColor: '#1a468a',
+  }
+});
 
 function App() {
 
@@ -62,21 +80,3 @@ function App() {
 }
 
 export default App;
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-    backgroundColor: '#dae4f2',
-  },
-  navBarTitle: {
-    flexGrow: 1,
-  },
-  navBarSectionTitles: {
-    flexGrow: 1,
-    textDecoration: 'none',
-    color: "white",
-  },
-  navBar: {
-    backgroundColor: '#1a468a',
-  }
-});
