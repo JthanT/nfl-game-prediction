@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { makeStyles } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import { 
+    Dialog, 
+    makeStyles,
+    DialogActions, 
+    IconButton, 
+    Select, 
+    MenuItem, 
+    FormControl,
+    Typography
+} from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import { format } from 'date-fns';
 import GameDetails from './GameDetails';
 import { timeSelections, currentLeagueTimes } from '../utils/time';
 import { GAME_SCHEDULE_BY_YEAR_QUERY } from '../graphql/queries/game.queries';
+
+const useStyles = makeStyles({
+    tableContent: {
+        padding: '10px',
+    },
+    closeDialogButton: {
+        position: 'absolute',
+        left: '94%',
+        top: '2%',
+        backgroundColor: 'lightgray',
+        color: 'gray',
+    },
+    button: {
+        textTransform: 'none',
+    },
+    selectors: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    timeSelector: {
+        display: 'flex',
+        width: '100px',
+        paddingRight: '20px',
+    },
+});
 
 function GameList() {
 
@@ -26,26 +54,19 @@ function GameList() {
         }
     );
 
-    const [open, setOpen] = useState(false);
+    const classes = useStyles();
+    
+    const [openDetails, setOpenDetails] = useState(false);
     const [id, setId] = useState<number>(0);
-    const [leagueWeek, setLeagueWeek] = useState<number>(1);
-    const [openWeekSelector, setOpenWeekSelector] = useState<boolean>(false);
+    const [leagueWeek, setLeagueWeek] = useState<number>(currentLeagueTimes.currentLeagueWeek);
 
-    const handleOpenGameDetails = (gameId: string) => {
-        setId(parseInt(gameId));
-        setOpen(true);
+    const handleOpenDetails = (gameId: number) => {
+        setId(gameId);
+        setOpenDetails(true);
     };
 
-    const handleCloseGameDetails = () => {
-        setOpen(false);
-    };
-
-    const handleOpenWeekSelector = () => {
-        setOpenWeekSelector(true);
-    };
-
-    const handleCloseWeekSelector = () => {
-        setOpenWeekSelector(false);
+    const handleCloseDetails = () => {
+        setOpenDetails(false);
     };
 
     const handleWeekSelect = (week: number) => {
@@ -56,17 +77,27 @@ function GameList() {
         });
     };
 
-    const classes = useStyles();
-
     return (
         <div>
-            <Dialog onClose={handleCloseGameDetails} open={open} fullWidth={true} maxWidth={'md'}>
+            <Dialog 
+                onClose={handleCloseDetails} 
+                open={openDetails} 
+                fullWidth={true} 
+                maxWidth={'sm'}
+            >
                 <DialogActions>
-                    <IconButton size="small" onClick={handleCloseGameDetails} className={classes.closeDialogButton}>
-                        <CloseIcon/>
+                    <IconButton 
+                        size="small" 
+                        onClick={handleCloseDetails} 
+                        className={classes.closeDialogButton}
+                    >
+                        <Close />
                     </IconButton>
                 </DialogActions>
-                <GameDetails gameId={id} />
+                <GameDetails 
+                    gameId={id} 
+                    closeDetailsMenu={handleCloseDetails} 
+                />
             </Dialog>
             <div className={classes.tableContent}>
                 <MUIDataTable
@@ -92,34 +123,49 @@ function GameList() {
                             name: 'predicted_winner',
                         },
                         {
+                            label: 'Winner',
+                            name: 'winning_team',
+                        },
+                        {
                             label: 'Date',
                             name: 'date',
+                            options: {
+                                customBodyRender: (value, tableMeta) => {
+                                    const timeStamp = value + 'T' + tableMeta.rowData[6];
+                                    return format(new Date(timeStamp), 'MMM d');
+                                }
+                            }
                         },
                         {
                             label: 'Time (CST)',
                             name: 'time',
+                            options: {
+                                customBodyRender: (value, tableMeta) => {
+                                    const timeStamp = tableMeta.rowData[5] + 'T' + value;
+                                    return format(new Date(timeStamp), 'h:mm a');
+                                }
+                            }
                         },
                     ]}
                     title={(
-                        <FormControl className={classes.weekSelector}>
-                            <InputLabel htmlFor="week-id">Week</InputLabel>
-                            <Select
-                                value={leagueWeek}
-                                labelId="week-id"
-                                onChange={
-                                    (fieldValue) => 
-                                        handleWeekSelect(fieldValue.target.value as number)
-                                }
-                                onClose={handleCloseWeekSelector}
-                                onOpen={handleOpenWeekSelector}
-                            >
-                                {(
-                                    timeSelections.leagueWeeks.map((week) => {
-                                        return <MenuItem value={week}>{week}</MenuItem>
-                                    })
-                                )}
-                            </Select>
-                        </FormControl>
+                        <div className={classes.selectors}>
+                            <FormControl className={classes.timeSelector}>
+                                <Typography>Week</Typography>
+                                <Select
+                                    value={leagueWeek}
+                                    onChange={
+                                        (fieldValue) => 
+                                            handleWeekSelect(fieldValue.target.value as number)
+                                    }
+                                >
+                                    {(
+                                        timeSelections.leagueWeeks.map((week) => {
+                                            return <MenuItem value={week}>{week}</MenuItem>
+                                        })
+                                    )}
+                                </Select>
+                            </FormControl>
+                        </div>
                     )}
                     options={{
                         print: false,
@@ -129,7 +175,7 @@ function GameList() {
                         filter: false,
                         rowsPerPage: 16,
                         rowsPerPageOptions: [],
-                        onRowClick: (rowName) => handleOpenGameDetails(rowName[0]),
+                        onRowClick: (rowName) => handleOpenDetails(parseInt(rowName[0])),
                     }}
                 />
             </div>
@@ -138,20 +184,3 @@ function GameList() {
 }
 
 export default GameList;
-
-const useStyles = makeStyles({
-    tableContent: {
-        padding: '10px',
-    },
-    closeDialogButton: {
-        position: 'absolute',
-        left: '95%',
-        top: '2%',
-        backgroundColor: 'lightgray',
-        color: 'gray',
-    },
-    weekSelector: {
-        display: 'flex',
-        width: '20%',
-    },
-});
