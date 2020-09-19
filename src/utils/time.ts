@@ -2,8 +2,8 @@ import React from 'react';
 
 export const currentLeagueTimes = {
     currentLeagueYear: 2020,
-    currentLeagueWeek: 1,
-    usualGameTime: "10:00", // CST
+    currentLeagueWeek: 2,
+    usualGameTime: "11:00", // CST
 };
 
 export const timeSelections = {

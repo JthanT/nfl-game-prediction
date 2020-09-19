@@ -7,9 +7,7 @@ export const TEAM_DETAILS_FRAGMENT = gql`
         offence_ranking
         defence_ranking
         special_teams_ranking
-        coaching_factor
         injury_severity
-        talent_factor
         grade
     }
 `

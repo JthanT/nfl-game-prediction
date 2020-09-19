@@ -4,8 +4,6 @@
 ##### - Offence Rank
 ##### - Defence Rank
 ##### - Special Teams Rank
-##### - Coaching
-##### - Roster Talent
 ##### - Injuries
 
 ## Requirements
