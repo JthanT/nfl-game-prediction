@@ -1,5 +1,3 @@
-import React from 'react';
-
 const outcomeConfidenceCategories = {
     close: "Close Win",
     convincing: "Convincing Win",
@@ -14,7 +12,7 @@ const calculateGradeDifferential = (awayTeamGrade: number, homeTeamGrade: number
     } else {
         return 0;
     }
-}
+};
 
 export const outcomeConfidence = (awayTeamGrade: number, homeTeamGrade: number) => {
     const gradeDifferencial = calculateGradeDifferential(awayTeamGrade, homeTeamGrade);
@@ -28,4 +26,4 @@ export const outcomeConfidence = (awayTeamGrade: number, homeTeamGrade: number) 
             return outcomeConfidenceCategories.close;
         }
     }
-}
+};
