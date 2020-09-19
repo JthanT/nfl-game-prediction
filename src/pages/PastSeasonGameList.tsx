@@ -135,11 +135,15 @@ function PastSeasonGameList() {
                             name: 'predicted_winner',
                         },
                         {
+                            label: 'Winner',
+                            name: 'winning_team',
+                        },
+                        {
                             label: 'Date',
                             name: 'date',
                             options: {
                                 customBodyRender: (value, tableMeta) => {
-                                    const timeStamp = value + 'T' + tableMeta.rowData[5];
+                                    const timeStamp = value + 'T' + tableMeta.rowData[6];
                                     return format(new Date(timeStamp), 'MMM d');
                                 }
                             }
@@ -149,7 +153,7 @@ function PastSeasonGameList() {
                             name: 'time',
                             options: {
                                 customBodyRender: (value, tableMeta) => {
-                                    const timeStamp = tableMeta.rowData[4] + 'T' + value;
+                                    const timeStamp = tableMeta.rowData[5] + 'T' + value;
                                     return format(new Date(timeStamp), 'h:mm a');
                                 }
                             }
