@@ -1,18 +1,49 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { makeStyles } from '@material-ui/core/styles';
 import MUIDataTable from "mui-datatables";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import { 
+    Dialog, 
+    makeStyles,
+    DialogActions, 
+    IconButton, 
+    Select, 
+    MenuItem, 
+    FormControl,
+    Typography,
+} from '@material-ui/core';
+import { Close } from '@material-ui/icons';
+import { format } from 'date-fns';
 import GameDetails from './GameDetails';
 import { timeSelections, currentLeagueTimes } from '../utils/time';
 import { GAME_SCHEDULE_BY_YEAR_QUERY } from '../graphql/queries/game.queries';
+
+const useStyles = makeStyles({
+    tableContent: {
+        padding: '10px',
+    },
+    closeDialogButton: {
+        position: 'absolute',
+        left: '94%',
+        top: '2%',
+        backgroundColor: 'lightgray',
+        color: 'gray',
+    },
+    button: {
+        textTransform: 'none',
+    },
+    selectors: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    addGameButton: {
+        paddingRight: '10px',
+    },
+    timeSelector: {
+        display: 'flex',
+        width: '100px',
+        paddingRight: '20px',
+    },
+});
 
 function PastSeasonGameList() {
 
@@ -26,28 +57,20 @@ function PastSeasonGameList() {
         }
     );
 
-    const [open, setOpen] = useState(false);
+    const classes = useStyles();
+
+    const [openDetails, setOpenDetails] = useState(false);
     const [id, setId] = useState<number>(0);
-    const [leagueYear, setLeagueYear] = useState<number>(2020);
-    const [openYearSelector, setOpenYearSelector] = useState<boolean>(false);
-    const [leagueWeek, setLeagueWeek] = useState<number>(1);
-    const [openWeekSelector, setOpenWeekSelector] = useState<boolean>(false);
+    const [leagueYear, setLeagueYear] = useState<number>(currentLeagueTimes.currentLeagueYear);
+    const [leagueWeek, setLeagueWeek] = useState<number>(currentLeagueTimes.currentLeagueWeek);
 
-    const handleOpenGameDetails = (gameId: string) => {
-        setId(parseInt(gameId));
-        setOpen(true);
+    const handleOpenDetails = (gameId: number) => {
+        setId(gameId);
+        setOpenDetails(true);
     };
 
-    const handleCloseGameDetails = () => {
-        setOpen(false);
-    };
-
-    const handleOpenYearSelector = () => {
-        setOpenYearSelector(true);
-    };
-
-    const handleCloseYearSelector = () => {
-        setOpenYearSelector(false);
+    const handleCloseDetails = () => {
+        setOpenDetails(false);
     };
 
     const handleLeagueYearSelect = (year: number) => {
@@ -58,14 +81,6 @@ function PastSeasonGameList() {
         });
     };
 
-    const handleOpenWeekSelector = () => {
-        setOpenWeekSelector(true);
-    };
-
-    const handleCloseWeekSelector = () => {
-        setOpenWeekSelector(false);
-    };
-
     const handleWeekSelect = (week: number) => {
         setLeagueWeek(week);
         refetch({
@@ -74,17 +89,27 @@ function PastSeasonGameList() {
         });
     };
 
-    const classes = useStyles();
-
     return (
         <div>
-            <Dialog onClose={handleCloseGameDetails} open={open} fullWidth={true} maxWidth={'md'}>
+            <Dialog 
+                onClose={handleCloseDetails} 
+                open={openDetails} 
+                fullWidth={true} 
+                maxWidth={'sm'}
+            >
                 <DialogActions>
-                    <IconButton size="small" onClick={handleCloseGameDetails} className={classes.closeDialogButton}>
-                        <CloseIcon/>
+                    <IconButton 
+                        size="small" 
+                        onClick={handleCloseDetails} 
+                        className={classes.closeDialogButton}
+                    >
+                        <Close />
                     </IconButton>
                 </DialogActions>
-                <GameDetails gameId={id} />
+                <GameDetails 
+                    gameId={id}
+                    closeDetailsMenu={handleCloseDetails} 
+                />
             </Dialog>
             <div className={classes.tableContent}>
                 <MUIDataTable
@@ -106,27 +131,40 @@ function PastSeasonGameList() {
                             name: 'team_2_name',
                         },
                         {
-                            label: 'Winner',
-                            name: 'winning_team',
-                        },
-                        {
                             label: 'Predicted Winner',
                             name: 'predicted_winner',
                         },
+                        {
+                            label: 'Date',
+                            name: 'date',
+                            options: {
+                                customBodyRender: (value, tableMeta) => {
+                                    const timeStamp = value + 'T' + tableMeta.rowData[5];
+                                    return format(new Date(timeStamp), 'MMM d');
+                                }
+                            }
+                        },
+                        {
+                            label: 'Time (CST)',
+                            name: 'time',
+                            options: {
+                                customBodyRender: (value, tableMeta) => {
+                                    const timeStamp = tableMeta.rowData[4] + 'T' + value;
+                                    return format(new Date(timeStamp), 'h:mm a');
+                                }
+                            }
+                        },
                     ]}
                     title={(
-                        <div className={classes.selector}>
-                            <FormControl className={classes.yearSelector}>
-                                <InputLabel htmlFor="year-id">League Year</InputLabel>
+                        <div className={classes.selectors}>
+                            <FormControl className={classes.timeSelector}>
+                                <Typography>League Year</Typography>
                                 <Select
                                     value={leagueYear}
-                                    labelId="year-id"
                                     onChange={
                                         (fieldValue) => 
                                             handleLeagueYearSelect(fieldValue.target.value as number)
                                     }
-                                    onClose={handleCloseYearSelector}
-                                    onOpen={handleOpenYearSelector}
                                 >
                                     {(
                                         timeSelections.leagueYears.map((year) => {
@@ -135,17 +173,14 @@ function PastSeasonGameList() {
                                     )}
                                 </Select>
                             </FormControl>
-                            <FormControl className={classes.weekSelector}>
-                                <InputLabel htmlFor="week-id">Week</InputLabel>
+                            <FormControl className={classes.timeSelector}>
+                                <Typography>Week</Typography>
                                 <Select
                                     value={leagueWeek}
-                                    labelId="week-id"
                                     onChange={
                                         (fieldValue) => 
                                             handleWeekSelect(fieldValue.target.value as number)
                                     }
-                                    onClose={handleCloseWeekSelector}
-                                    onOpen={handleOpenWeekSelector}
                                 >
                                     {(
                                         timeSelections.leagueWeeks.map((week) => {
@@ -164,7 +199,7 @@ function PastSeasonGameList() {
                         filter: false,
                         rowsPerPage: 16,
                         rowsPerPageOptions: [],
-                        onRowClick: (rowName) => handleOpenGameDetails(rowName[0]),
+                        onRowClick: (rowName) => handleOpenDetails(parseInt(rowName[0])),
                     }}
                 />
             </div>
@@ -173,28 +208,3 @@ function PastSeasonGameList() {
 }
 
 export default PastSeasonGameList;
-
-const useStyles = makeStyles({
-    tableContent: {
-        padding: '10px',
-    },
-    closeDialogButton: {
-        position: 'absolute',
-        left: '95%',
-        top: '2%',
-        backgroundColor: 'lightgray',
-        color: 'gray',
-    },
-    selector: {
-        display: 'flex',
-    },
-    yearSelector: {
-        display: 'flex',
-        width: '25%',
-        paddingRight: '10px',
-    },
-    weekSelector: {
-        display: 'flex',
-        width: '20%',
-    },
-});
