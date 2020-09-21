@@ -9,5 +9,6 @@ export const TEAM_DETAILS_FRAGMENT = gql`
         special_teams_ranking
         injury_severity
         grade
+        bye_week
     }
 `

@@ -2,34 +2,21 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import MUIDataTable from "mui-datatables";
 import { 
-    Dialog, 
     makeStyles,
-    DialogActions, 
-    IconButton, 
     Select, 
     MenuItem, 
     FormControl,
     Typography
 } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
 import { format } from 'date-fns';
 import GameDetails from './GameDetails';
 import { timeSelections, currentLeagueTimes } from '../utils/time';
 import { GAME_SCHEDULE_BY_YEAR_QUERY } from '../graphql/queries/game.queries';
+import DialogBox from '../components/DialogBox';
 
 const useStyles = makeStyles({
     tableContent: {
         padding: '10px',
-    },
-    closeDialogButton: {
-        position: 'absolute',
-        left: '94%',
-        top: '2%',
-        backgroundColor: 'lightgray',
-        color: 'gray',
-    },
-    button: {
-        textTransform: 'none',
     },
     selectors: {
         display: 'flex',
@@ -79,26 +66,16 @@ function GameList() {
 
     return (
         <div>
-            <Dialog 
-                onClose={handleCloseDetails} 
+            <DialogBox
+                handleClose={handleCloseDetails} 
                 open={openDetails} 
-                fullWidth={true} 
-                maxWidth={'sm'}
-            >
-                <DialogActions>
-                    <IconButton 
-                        size="small" 
-                        onClick={handleCloseDetails} 
-                        className={classes.closeDialogButton}
-                    >
-                        <Close />
-                    </IconButton>
-                </DialogActions>
-                <GameDetails 
+                components={
+                    <GameDetails 
                     gameId={id} 
                     closeDetailsMenu={handleCloseDetails} 
                 />
-            </Dialog>
+                }
+            />
             <div className={classes.tableContent}>
                 <MUIDataTable
                     data={data ? data.game_schedule : []}
