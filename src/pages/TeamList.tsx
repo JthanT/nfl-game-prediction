@@ -68,6 +68,10 @@ function TeamList() {
                             label: 'Team Grade',
                             name: 'grade',
                         },
+                        {
+                            label: 'Bye Week',
+                            name: 'bye_week',
+                        },
                     ]}
                     title="2020 Season Team Grades"
                     options={{

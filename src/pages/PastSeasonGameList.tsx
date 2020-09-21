@@ -18,22 +18,9 @@ const useStyles = makeStyles({
     tableContent: {
         padding: '10px',
     },
-    closeDialogButton: {
-        position: 'absolute',
-        left: '94%',
-        top: '2%',
-        backgroundColor: 'lightgray',
-        color: 'gray',
-    },
-    button: {
-        textTransform: 'none',
-    },
     selectors: {
         display: 'flex',
         alignItems: 'center'
-    },
-    addGameButton: {
-        paddingRight: '10px',
     },
     timeSelector: {
         display: 'flex',
@@ -48,7 +35,7 @@ function PastSeasonGameList() {
         GAME_SCHEDULE_BY_YEAR_QUERY,
         {
             variables: {
-                leagueYear: currentLeagueTimes.currentLeagueYear, //Subtract by 1 after 2020
+                leagueYear: currentLeagueTimes.currentLeagueYear,
                 leagueWeek: 1
             },
         }

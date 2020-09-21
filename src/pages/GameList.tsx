@@ -18,16 +18,6 @@ const useStyles = makeStyles({
     tableContent: {
         padding: '10px',
     },
-    closeDialogButton: {
-        position: 'absolute',
-        left: '94%',
-        top: '2%',
-        backgroundColor: 'lightgray',
-        color: 'gray',
-    },
-    button: {
-        textTransform: 'none',
-    },
     selectors: {
         display: 'flex',
         alignItems: 'center'
