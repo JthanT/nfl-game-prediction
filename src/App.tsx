@@ -16,14 +16,16 @@ import { ApolloProvider } from "@apollo/react-hooks";
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1,
-    backgroundColor: '#dae4f2',
+    height: '100%',
+    backgroundColor: '#deebff',
   },
   navBarTitle: {
-    flexGrow: 1,
+    paddingRight: '100px',
   },
-  navBarSectionTitles: {
-    flexGrow: 1,
+  linksRow: {
+    paddingRight: '50px',
+  },
+  links: {
     textDecoration: 'none',
     color: "white",
   },
@@ -51,18 +53,26 @@ function App() {
         <Router>
           <AppBar position="static" className={classes.navBar}>
             <Toolbar>
-              <Typography variant="h6" className={classes.navBarTitle}>
-                NFL Game Predictor
-              </Typography>
-              <Link to={"/"} className={classes.navBarSectionTitles}>
-                Team List
-              </Link>
-              <Link to={"/game-list"} className={classes.navBarSectionTitles}>
-                Schedule
-              </Link>
-              <Link to={"/past-season-game-list"} className={classes.navBarSectionTitles}>
-                Past Seasons
-              </Link>
+              <div className={classes.navBarTitle}>
+                <Typography variant="h6">
+                  NFL Game Predictor
+                </Typography>
+              </div>
+              <div className={classes.linksRow}>
+                <Link to={"/"} className={classes.links}>
+                  Team List
+                </Link>
+              </div>
+              <div className={classes.linksRow}>
+                <Link to={"/game-list"} className={classes.links}>
+                  Schedule
+                </Link>
+              </div>
+              <div className={classes.linksRow}>
+                <Link to={"/past-season-game-list"} className={classes.links}>
+                  Past Seasons
+                </Link>
+              </div>
             </Toolbar>
           </AppBar>
             <Switch>  
