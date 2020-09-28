@@ -43,7 +43,7 @@ function TeamList() {
             <div className={classes.tableContent}>
                 {!loading ? (
                     <MUIDataTable
-                        data={data ? data.team_details : []}
+                        data={data?.team_details ?? []}
                         columns={[
                             {
                                 label: ' ',

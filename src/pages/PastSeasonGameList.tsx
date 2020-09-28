@@ -7,6 +7,8 @@ import {
     MenuItem, 
     FormControl,
     Typography,
+    TableRow, 
+    TableCell 
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import GameDetails from './GameDetails';
@@ -16,6 +18,15 @@ import DialogBox from '../components/DialogBox';
 import PageLoading from '../components/PageLoading';
 
 const useStyles = makeStyles({
+    rightRoot: {
+        backgroundColor: '#ECFFE9'
+    },
+    wrongRoot: {
+        backgroundColor: '#FFEDE9'
+    },
+    undeterminedRoot: {
+        backgroundColor: 'white'
+    },
     tableContent: {
         padding: '10px',
     },
@@ -75,6 +86,18 @@ function PastSeasonGameList() {
         });
     };
 
+    const predictionCorrectness = (predicted?: string, winner?: string) => {
+        if (predicted && winner) { 
+            if (predicted === winner) {
+                return 'right';
+            } else {
+                return 'wrong';
+            }
+        } else {
+            return 'undetermined';
+        }
+    };
+
     return (
         <div>
             <DialogBox
@@ -90,7 +113,7 @@ function PastSeasonGameList() {
             <div className={classes.tableContent}>
                 {!loading ? (
                     <MUIDataTable
-                        data={data ? data.game_schedule : []}
+                        data={data?.game_schedule ?? []}
                         columns={[
                             {
                                 label: ' ',
@@ -149,7 +172,7 @@ function PastSeasonGameList() {
                                     >
                                         {(
                                             timeSelections.leagueYears.map((year) => {
-                                                return <MenuItem value={year}>{year}</MenuItem>
+                                                return <MenuItem key={year} value={year}>{year}</MenuItem>
                                             })
                                         )}
                                     </Select>
@@ -165,7 +188,7 @@ function PastSeasonGameList() {
                                     >
                                         {(
                                             timeSelections.leagueWeeks.map((week) => {
-                                                return <MenuItem value={week}>{week}</MenuItem>
+                                                return <MenuItem key={week} value={week}>{week}</MenuItem>
                                             })
                                         )}
                                     </Select>
@@ -181,6 +204,39 @@ function PastSeasonGameList() {
                             rowsPerPage: 16,
                             rowsPerPageOptions: [],
                             onRowClick: (rowName) => handleOpenDetails(parseInt(rowName[0])),
+                            customRowRender: (data, dataIndex, rowIndex) => {
+                                const accuracy = predictionCorrectness(data[3], data[4]);
+                                return (
+                                    <TableRow className={
+                                        accuracy === 'right' ? 
+                                        classes.rightRoot : (
+                                                accuracy === 'wrong' ? 
+                                                classes.wrongRoot : 
+                                                classes.undeterminedRoot
+                                            )
+                                        }
+                                    >
+                                        <TableCell>
+                                            <Typography>{data[1]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[2]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[3]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[4]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[5]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[6]}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
                         }}
                     />
                 ) : (

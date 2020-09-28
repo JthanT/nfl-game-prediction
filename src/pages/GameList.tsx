@@ -6,7 +6,9 @@ import {
     Select, 
     MenuItem, 
     FormControl,
-    Typography
+    Typography,
+    TableRow, 
+    TableCell 
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { GAME_SCHEDULE_BY_YEAR_QUERY } from '../graphql/queries/game.queries';
@@ -16,6 +18,15 @@ import DialogBox from '../components/DialogBox';
 import PageLoading from '../components/PageLoading';
 
 const useStyles = makeStyles({
+    rightRoot: {
+        backgroundColor: '#ECFFE9'
+    },
+    wrongRoot: {
+        backgroundColor: '#FFEDE9'
+    },
+    undeterminedRoot: {
+        backgroundColor: 'white'
+    },
     tableContent: {
         padding: '10px',
     },
@@ -66,6 +77,18 @@ function GameList() {
         });
     };
 
+    const predictionCorrectness = (predicted?: string, winner?: string) => {
+        if (predicted && winner) { 
+            if (predicted === winner) {
+                return 'right';
+            } else {
+                return 'wrong';
+            }
+        } else {
+            return 'undetermined';
+        }
+    };
+
     return (
         <div>
             <DialogBox
@@ -81,7 +104,7 @@ function GameList() {
             <div className={classes.tableContent}>
                 {!loading ? (
                     <MUIDataTable
-                        data={data ? data.game_schedule : []}
+                        data={data?.game_schedule ?? []}
                         columns={[
                             {
                                 label: ' ',
@@ -156,6 +179,39 @@ function GameList() {
                             rowsPerPage: 16,
                             rowsPerPageOptions: [],
                             onRowClick: (rowName) => handleOpenDetails(parseInt(rowName[0])),
+                            customRowRender: (data, dataIndex, rowIndex) => {
+                                const accuracy = predictionCorrectness(data[3], data[4]);
+                                return (
+                                    <TableRow className={
+                                        accuracy === 'right' ? 
+                                        classes.rightRoot : (
+                                                accuracy === 'wrong' ? 
+                                                classes.wrongRoot : 
+                                                classes.undeterminedRoot
+                                            )
+                                        }
+                                    >
+                                        <TableCell>
+                                            <Typography>{data[1]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[2]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[3]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[4]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[5]}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{data[6]}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
                         }}
                     />
                 ) : (
