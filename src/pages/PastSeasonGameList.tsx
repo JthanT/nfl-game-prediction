@@ -7,8 +7,6 @@ import {
     MenuItem, 
     FormControl,
     Typography,
-    TableRow, 
-    TableCell 
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import GameDetails from './GameDetails';
@@ -137,6 +135,25 @@ function PastSeasonGameList() {
                             {
                                 label: 'Winner',
                                 name: 'winning_team',
+                                options: {
+                                    customBodyRender: (value, tableMeta) => {
+                                        const accuracy = predictionCorrectness(tableMeta.rowData[3], tableMeta.rowData[4]);
+                                        return (
+                                            <Typography
+                                                className={
+                                                    accuracy === 'right' ? 
+                                                    classes.rightRoot : (
+                                                        accuracy === 'wrong' ? 
+                                                        classes.wrongRoot : 
+                                                        classes.undeterminedRoot
+                                                    )
+                                                }
+                                            >
+                                                {value}
+                                            </Typography>
+                                        );
+                                    }
+                                }
                             },
                             {
                                 label: 'Date',
@@ -204,39 +221,6 @@ function PastSeasonGameList() {
                             rowsPerPage: 16,
                             rowsPerPageOptions: [],
                             onRowClick: (rowName) => handleOpenDetails(parseInt(rowName[0])),
-                            customRowRender: (data, dataIndex, rowIndex) => {
-                                const accuracy = predictionCorrectness(data[3], data[4]);
-                                return (
-                                    <TableRow className={
-                                        accuracy === 'right' ? 
-                                        classes.rightRoot : (
-                                                accuracy === 'wrong' ? 
-                                                classes.wrongRoot : 
-                                                classes.undeterminedRoot
-                                            )
-                                        }
-                                    >
-                                        <TableCell>
-                                            <Typography>{data[1]}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{data[2]}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{data[3]}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{data[4]}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{data[5]}</Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography>{data[6]}</Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            }
                         }}
                     />
                 ) : (
