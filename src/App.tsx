@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 function App() {
 
   const httpLink = new HttpLink({
-    uri: process.env.REACT_APP_API_URL
+    uri: "https://nfl-game-prediction.herokuapp.com/v1/graphql"
   });
 
   const client = new ApolloClient({
