@@ -14,6 +14,8 @@ import { timeSelections, currentLeagueTimes } from '../utils/time';
 import GameDetails from './GameDetails';
 import DialogBox from '../components/DialogBox';
 import PageLoading from '../components/PageLoading';
+import RightPredictionIcon from '../components/icons/RightPredictionIcon';
+import WrongPredictionIcon from '../components/icons/WrongPredictionIcon';
 
 const useStyles = makeStyles({
     rightRoot: {
@@ -37,6 +39,11 @@ const useStyles = makeStyles({
         display: 'flex',
         width: '100px',
         paddingRight: '20px',
+    },
+    winnerRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
 });
 
@@ -130,18 +137,13 @@ function GameList() {
                                     customBodyRender: (value, tableMeta) => {
                                         const accuracy = predictionCorrectness(tableMeta.rowData[3], tableMeta.rowData[4]);
                                         return (
-                                            <Typography
-                                                className={
-                                                    accuracy === 'right' ? 
-                                                    classes.rightRoot : (
-                                                        accuracy === 'wrong' ? 
-                                                        classes.wrongRoot : 
-                                                        classes.undeterminedRoot
-                                                    )
-                                                }
-                                            >
-                                                {value}
-                                            </Typography>
+                                            <div className={classes.winnerRow}>
+                                                <Typography>
+                                                    {value}
+                                                </Typography>
+                                                {accuracy === 'right' && <RightPredictionIcon />}
+                                                {accuracy === 'wrong' && <WrongPredictionIcon />}
+                                            </div>
                                         );
                                     }
                                 }
